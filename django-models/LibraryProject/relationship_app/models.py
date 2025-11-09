@@ -1,4 +1,7 @@
 # relationship_app/models.py
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -41,3 +44,36 @@ class Librarian(models.Model):
 
     def __str__(self):
         return f"{self.name} — {self.library.name}"
+    
+    # --- ADD THIS NEW MODEL AND SIGNAL AT THE BOTTOM ---
+
+# Step 1: Extend the User Model
+class UserProfile(models.Model):
+    # Link to the built-in User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    # Role choices
+    ROLE_CHOICES = (
+        ('Admin', 'Admin'),
+        ('Librarian', 'Librarian'),
+        ('Member', 'Member'),
+    )
+    
+    # Role field
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='Member')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+
+# Automatic Creation: Django Signal
+# This function will run *after* a User object is saved
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    # 'created' will be True only the first time the user is created
+    if created:
+        UserProfile.objects.create(user=instance)
+
+# This second signal ensures the profile is saved when the user is saved
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
