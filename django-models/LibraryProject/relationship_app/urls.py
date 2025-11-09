@@ -1,16 +1,25 @@
-# in relationship_app/urls.py
+# In relationship_app/urls.py
 
 from django.urls import path
-# --- THIS IS THE FIX ---
-# Import each view by its specific name
-from .views import list_books, LibraryDetailView
+# We don't need the built-in views anymore for this
+from django.contrib.auth.views import LoginView 
+
+# Import ALL your views from views.py
+from .views import list_books, LibraryDetailView, register, custom_logout_view
 
 urlpatterns = [
-    # Path for the function-based book list view
-    # Use 'list_books' directly (no 'views.')
-    path('books/', list_books, name='book-list'), # <-- CHANGED
+    # Your previous paths
+    path('books/', list_books, name='book-list'),
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library-detail'),
     
-    # Path for the class-based library detail view
-    # Use 'LibraryDetailView' directly
-    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library-detail'), # <-- CHANGED
+    # LOGIN (keeps using the built-in view)
+    path('login/', 
+         LoginView.as_view(template_name='relationship_app/login.html'), 
+         name='login'),
+         
+    # LOGOUT (now points to your new custom view)
+    path('logout/', custom_logout_view, name='logout'),
+         
+    # REGISTER
+    path('register/', register, name='register'),
 ]

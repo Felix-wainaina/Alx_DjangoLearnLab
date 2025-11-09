@@ -1,32 +1,46 @@
-# in relationship_app/views.py
+# In relationship_app/views.py
 
-from django.shortcuts import render
+# --- IMPORTS (ALL IN ONE PLACE) ---
+from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import UserCreationForm
 
-# 1. Function-Based View (FBV) for listing all books
+# --- YOUR EXISTING VIEWS (from Task 1) ---
+
+# 1. Function-based View
 def list_books(request):
-    # Get all books from the database
     books = Book.objects.all()
-    
-    # Create the context (data to pass to the template)
     context = {
         'books': books
     }
-    
-    # Render the template with the context
     return render(request, 'relationship_app/list_books.html', context)
 
 
-# 2. Class-Based View (CBV) for a single library's details
+# 2. Class-based View
 class LibraryDetailView(DetailView):
-    # Tell the view which model it's working with
     model = Library
-    
-    # Tell the view which template to use
     template_name = 'relationship_app/library_detail.html'
-    
-    # Tell the view what to call the object in the template
-    # (The template uses 'library', so we set this)
-    context_object_name = 'library'
+
+
+# --- NEW AUTHENTICATION VIEW (from Task 2) ---
+
+# 3. Registration View
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user) # Log the user in immediately
+            return redirect("book-list") # Redirect to your book list page
+    else:
+        form = UserCreationForm()
+    return render(request, "relationship_app/register.html", {"form": form})
+
+# --- ADD THIS NEW VIEW AT THE BOTTOM ---
+def custom_logout_view(request):
+    logout(request)
+    # Now, render the 'logged out' page
+    return render(request, "relationship_app/logout.html")
