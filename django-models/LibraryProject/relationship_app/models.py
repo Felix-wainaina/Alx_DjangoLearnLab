@@ -15,6 +15,7 @@ class Book(models.Model):
         on_delete=models.CASCADE,
         related_name='books'
     )
+    publication_year = models.IntegerField(default=2000)  # <-- ADD THIS LINE
 
     def __str__(self):
         return f"{self.title} (by {self.author.name})"

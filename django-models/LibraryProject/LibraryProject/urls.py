@@ -15,8 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include # <-- Make sure 'include' is imported
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # Add this line to connect your app's URLs
+    path('', include('relationship_app.urls')),
 ]
