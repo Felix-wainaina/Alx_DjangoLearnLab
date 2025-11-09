@@ -2,61 +2,37 @@
 import os
 import django
 
-# IMPORTANT: this must match the folder that contains settings.py
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
 django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
 
-def prepare_sample_data():
-    # Create authors and books idempotently
-    author1, _ = Author.objects.get_or_create(name="Jane Doe")
-    b1, _ = Book.objects.get_or_create(title="Django Uncovered", author=author1)
-    b2, _ = Book.objects.get_or_create(title="Advanced Django", author=author1)
+# Prepare sample data
+author, _ = Author.objects.get_or_create(name="Jane Doe")
+book1, _ = Book.objects.get_or_create(title="Django Uncovered", author=author)
+book2, _ = Book.objects.get_or_create(title="Advanced Django", author=author)
 
-    author2, _ = Author.objects.get_or_create(name="John Smith")
-    b3, _ = Book.objects.get_or_create(title="Python Basics", author=author2)
+library, _ = Library.objects.get_or_create(name="Central Library")
+library.books.add(book1)
 
-    # Library and add books (ManyToMany)
-    lib, created = Library.objects.get_or_create(name="Central Library")
-    # add books only if not already present
-    lib.books.add(b1, b3)
+if not hasattr(library, 'librarian'):
+    Librarian.objects.create(name="Mary the Librarian", library=library)
 
-    # OneToOne: create librarian only if not exists
-    if not hasattr(lib, 'librarian'):
-        Librarian.objects.create(name="Mary the Librarian", library=lib)
+# --- ALX Checker queries ---
+library_name = "Central Library"
+author_name = "Jane Doe"
 
-    return {
-        'author1': author1,
-        'author2': author2,
-        'b1': b1,
-        'b2': b2,
-        'b3': b3,
-        'library': lib
-    }
+# 1) List all books in a library
+library = Library.objects.get(name=library_name)
+for b in library.books.all():
+    print(" -", b.title)
 
-def run_queries():
-    # 1) Query a specific author explicitly
-    author = Author.objects.get(name="Jane Doe")
+# 2) Query all books by a specific author
+author = Author.objects.get(name=author_name)
+books_by_author = Book.objects.filter(author=author)
+for b in books_by_author:
+    print(" -", b.title)
 
-    # 2) Get the library explicitly
-    library = Library.objects.get(name="Central Library")
-
-    # 3) Query all books by this author
-    books_by_author = Book.objects.filter(author=author)
-    print(f"\nBooks by {author.name}:")
-    for b in books_by_author:
-        print(" -", b.title)
-
-    # 4) List all books in the library
-    print(f"\nBooks in library '{library.name}':")
-    for b in library.books.all():
-        print(" -", b.title)
-
-    # 5) Retrieve the librarian explicitly
-    librarian = Librarian.objects.get(library=library)
-    print(f"\nLibrarian for {library.name}: {librarian.name}")
-
-if __name__ == "__main__":
-    prepare_sample_data()  # ensure sample data exists
-    run_queries()
+# 3) Retrieve the librarian for a library
+librarian = Librarian.objects.get(library=library)
+print("Librarian:", librarian.name)
