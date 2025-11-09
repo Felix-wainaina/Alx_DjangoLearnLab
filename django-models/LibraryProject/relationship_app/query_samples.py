@@ -34,33 +34,29 @@ def prepare_sample_data():
         'library': lib
     }
 
-def run_queries(samples):
-    author = samples['author']
-    library = samples['library']
+def run_queries():
+    # 1) Get the author explicitly
+    author = Author.objects.get(name="Jane Doe")
 
-    print("\n--- Sample data created ---")
-    print("Author:", author)
-    print("Library:", library)
-    print("Books in DB:", Book.objects.count())
+    # 2) Get the library explicitly
+    library = Library.objects.get(name="Central Library")
 
-    # 1) Query all books by a specific author
+    # 3) Query all books by this author
     books_by_author = Book.objects.filter(author=author)
     print(f"\nBooks by {author.name}:")
     for b in books_by_author:
         print(" -", b.title)
 
-    # 2) List all books in a library (ManyToMany)
+    # 4) List all books in this library
     print(f"\nBooks in library '{library.name}':")
     for b in library.books.all():
         print(" -", b.title)
 
-    # 3) Retrieve the librarian for a library (OneToOne)
-    try:
-        librarian = library.librarian
-        print(f"\nLibrarian for {library.name}: {librarian.name}")
-    except Librarian.DoesNotExist:
-        print(f"\nNo librarian set for {library.name}")
+    # 5) Retrieve the librarian
+    librarian = Librarian.objects.get(library=library)
+    print(f"\nLibrarian for {library.name}: {librarian.name}")
+
 
 if __name__ == "__main__":
-    samples = prepare_sample_data()
-    run_queries(samples)
+    prepare_sample_data()
+    run_queries()
