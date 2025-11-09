@@ -10,16 +10,16 @@ from relationship_app.models import Author, Book, Library, Librarian
 
 def prepare_sample_data():
     # Create authors and books idempotently
-    author, _ = Author.objects.get_or_create(name="Jane Doe")
-    b1, _ = Book.objects.get_or_create(title="Django Uncovered", author=author)
-    b2, _ = Book.objects.get_or_create(title="Advanced Django", author=author)
+    author1, _ = Author.objects.get_or_create(name="Jane Doe")
+    b1, _ = Book.objects.get_or_create(title="Django Uncovered", author=author1)
+    b2, _ = Book.objects.get_or_create(title="Advanced Django", author=author1)
 
-    a2, _ = Author.objects.get_or_create(name="John Smith")
-    b3, _ = Book.objects.get_or_create(title="Python Basics", author=a2)
+    author2, _ = Author.objects.get_or_create(name="John Smith")
+    b3, _ = Book.objects.get_or_create(title="Python Basics", author=author2)
 
     # Library and add books (ManyToMany)
     lib, created = Library.objects.get_or_create(name="Central Library")
-    # add returns nothing, so ensure we add only if not already present
+    # add books only if not already present
     lib.books.add(b1, b3)
 
     # OneToOne: create librarian only if not exists
@@ -27,7 +27,8 @@ def prepare_sample_data():
         Librarian.objects.create(name="Mary the Librarian", library=lib)
 
     return {
-        'author': author,
+        'author1': author1,
+        'author2': author2,
         'b1': b1,
         'b2': b2,
         'b3': b3,
@@ -35,7 +36,7 @@ def prepare_sample_data():
     }
 
 def run_queries():
-    # 1) Get the author explicitly
+    # 1) Query a specific author explicitly
     author = Author.objects.get(name="Jane Doe")
 
     # 2) Get the library explicitly
@@ -47,16 +48,15 @@ def run_queries():
     for b in books_by_author:
         print(" -", b.title)
 
-    # 4) List all books in this library
+    # 4) List all books in the library
     print(f"\nBooks in library '{library.name}':")
     for b in library.books.all():
         print(" -", b.title)
 
-    # 5) Retrieve the librarian
+    # 5) Retrieve the librarian explicitly
     librarian = Librarian.objects.get(library=library)
     print(f"\nLibrarian for {library.name}: {librarian.name}")
 
-
 if __name__ == "__main__":
-    prepare_sample_data()
+    prepare_sample_data()  # ensure sample data exists
     run_queries()
