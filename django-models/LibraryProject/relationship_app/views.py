@@ -6,7 +6,7 @@ from .models import Book
 from .models import Library
 
 # 1. Function-Based View (FBV) for listing all books
-def book_list_view(request):
+def list_books(request):
     # Get all books from the database
     books = Book.objects.all()
     

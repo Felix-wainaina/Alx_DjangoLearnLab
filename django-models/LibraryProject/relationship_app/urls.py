@@ -1,15 +1,16 @@
 # in relationship_app/urls.py
 
 from django.urls import path
-from . import views
+# --- THIS IS THE FIX ---
+# Import each view by its specific name
+from .views import list_books, LibraryDetailView
 
 urlpatterns = [
     # Path for the function-based book list view
-    # e.g., http://127.0.0.1:8000/books/
-    path('books/', views.book_list_view, name='book-list'),
+    # Use 'list_books' directly (no 'views.')
+    path('books/', list_books, name='book-list'), # <-- CHANGED
     
     # Path for the class-based library detail view
-    # <int:pk> captures the library's ID from the URL
-    # e.g., http://127.0.0.1:8000/library/1/
-    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'),
+    # Use 'LibraryDetailView' directly
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library-detail'), # <-- CHANGED
 ]
