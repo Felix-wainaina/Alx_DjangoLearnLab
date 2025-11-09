@@ -2,7 +2,8 @@
 
 from django.shortcuts import render
 from django.views.generic import DetailView
-from .models import Book, Library
+from .models import Book
+from .models import Library
 
 # 1. Function-Based View (FBV) for listing all books
 def book_list_view(request):
