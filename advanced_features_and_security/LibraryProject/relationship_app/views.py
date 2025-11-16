@@ -138,26 +138,26 @@ from django.http import HttpResponse
 # The 'raise_exception=True' argument will show a 403 Forbidden page
 # if the user does not have the required permission.
 
-@permission_required('relationship_app.can_view_book', raise_exception=True)
+@permission_required('relationship_app.can_view', raise_exception=True)
 def view_book(request, book_id):
     # In a real app, you'd fetch the book:
     # book = Book.objects.get(pk=book_id)
     return HttpResponse(f"You have permission to view book {book_id}.")
 
-@permission_required('relationship_app.can_create_book', raise_exception=True)
+@permission_required('relationship_app.can_create', raise_exception=True)
 def create_book(request):
     # In a real app, you'd show a form:
     # form = BookForm()
     return HttpResponse("You have permission to create a new book.")
 
-@permission_required('relationship_app.can_edit_book', raise_exception=True)
+@permission_required('relationship_app.can_edit', raise_exception=True)
 def edit_book(request, book_id):
     # In a real app, you'd show a form for a specific book:
     # book = Book.objects.get(pk=book_id)
     # form = BookForm(instance=book)
     return HttpResponse(f"You have permission to edit book {book_id}.")
 
-@permission_required('relationship_app.can_delete_book', raise_exception=True)
+@permission_required('relationship_app.can_delete', raise_exception=True)
 def delete_book(request, book_id):
     # In a real app, you'd show a confirmation page:
     # book = Book.objects.get(pk=book_id)

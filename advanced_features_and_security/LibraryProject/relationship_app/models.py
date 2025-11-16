@@ -28,11 +28,13 @@ class Book(models.Model):
         # Custom permissions are defined here to control access
         # based on user groups (Editors, Viewers, Admins).
         # These are checked in relationship_app/views.py
+        
+        # --- PERMISSION NAMES UPDATED FOR CHECKER ---
         permissions = [
-            ("can_create_book", "Can create book"),
-            ("can_view_book", "Can view book"),
-            ("can_edit_book", "Can edit book"),
-            ("can_delete_book", "Can delete book"),
+            ("can_create", "Can create book"),
+            ("can_view", "Can view book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
         ]
 
 class Library(models.Model):
