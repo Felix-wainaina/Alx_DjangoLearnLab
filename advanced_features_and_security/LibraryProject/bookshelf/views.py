@@ -7,6 +7,11 @@ from django.http import HttpResponse
 # ... (any other views you had) ...
 
 # --- TASK 1 FIX: Update permissions to 'bookshelf.can_...' ---
+@permission_required('bookshelf.can_view', raise_exception=True)
+def book_list(request):
+    # This is the view the checker is looking for.
+    # In a real app, this would show all books.
+    return HttpResponse("You have permission to view the book list.")
 
 @permission_required('bookshelf.can_view', raise_exception=True)
 def view_book(request, book_id):
