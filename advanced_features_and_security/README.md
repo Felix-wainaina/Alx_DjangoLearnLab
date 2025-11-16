@@ -12,7 +12,7 @@ This project uses custom permissions on the `Book` model to control user actions
 - **`can_edit`**: Allows editing an existing book.
 - **`can_delete`**: Allows deleting a book.
 
-These permissions are defined in `relationship_app/models.py` in the `Book` model's `Meta` class.
+These permissions are defined in `bookshelf/models.py` in the `Book` model's `Meta` class.
 
 ### Groups Configured
 Permissions are assigned to users via groups in the Django admin:
@@ -21,4 +21,13 @@ Permissions are assigned to users via groups in the Django admin:
 - **Admins**: Has all four permissions.
 
 ### View Enforcement
-Views in `relationship_app/views.py` use the `@permission_required` decorator to enforce these rules.
+Views in `bookshelf/views.py` use the `@permission_required` decorator to enforce these rules.
+
+## Task 2: Implementing Security Best Practices
+
+This project implements several security measures.
+
+- **Secure Settings**: `settings.py` is configured with `SECURE_CONTENT_TYPE_NOSNIFF`, `X_FRAME_OPTIONS`, and other settings. `SESSION_COOKIE_SECURE` and `CSRF_COOKIE_SECURE` are set to `False` for HTTP development but should be `True` in production.
+- **CSRF Protection**: All `POST` forms in the project (like the admin) are protected. The search form in `form_example.html` uses `GET`, but a commented example shows how `{% csrf_token %}` is used for `POST` forms.
+- **SQL Injection Prevention**: The `search_books` view in `bookshelf/views.py` uses a Django `SearchForm` to validate and sanitize user input. The view uses the Django ORM's `filter()` method, which parameterizes queries and prevents SQL injection.
+- **Content Security Policy (CSP)**: `django-csp` is installed and configured in `settings.py` to restrict content sources, mitigating XSS risks.
