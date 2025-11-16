@@ -30,4 +30,11 @@ urlpatterns = [
     path('add_book/', views.book_add_view, name='book-add'), # Keep "views." here
     path('edit_book/<int:pk>/', views.book_edit_view, name='book-edit'), # Keep "views." here
     path('delete_book/<int:pk>/', views.book_delete_view, name='book-delete'), # Keep "views." here
+
+    # --- TASK 5 PATHS (No changes needed) ---]
+    # --- ADD THESE NEW PATHS ---
+    path('book/create/', views.create_book, name='create_book'),
+    path('book/<int:book_id>/view/', views.view_book, name='view_book'),
+    path('book/<int:book_id>/edit/', views.edit_book, name='edit_book'),
+    path('book/<int:book_id>/delete/', views.delete_book, name='delete_book'),
 ]

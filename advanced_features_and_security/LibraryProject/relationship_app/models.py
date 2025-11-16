@@ -24,9 +24,14 @@ class Book(models.Model):
         return f"{self.title} (by {self.author.name})"
     # --- ADD THIS META CLASS ---
     class Meta:
+        # Documentation for permissions (Task 1, Step 5)
+        # Custom permissions are defined here to control access
+        # based on user groups (Editors, Viewers, Admins).
+        # These are checked in relationship_app/views.py
         permissions = [
-            ("can_add_book", "Can add book"),
-            ("can_change_book", "Can change book"),
+            ("can_create_book", "Can create book"),
+            ("can_view_book", "Can view book"),
+            ("can_edit_book", "Can edit book"),
             ("can_delete_book", "Can delete book"),
         ]
 
