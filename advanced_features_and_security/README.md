@@ -31,3 +31,12 @@ This project implements several security measures.
 - **CSRF Protection**: All `POST` forms in the project (like the admin) are protected. The search form in `form_example.html` uses `GET`, but a commented example shows how `{% csrf_token %}` is used for `POST` forms.
 - **SQL Injection Prevention**: The `search_books` view in `bookshelf/views.py` uses a Django `SearchForm` to validate and sanitize user input. The view uses the Django ORM's `filter()` method, which parameterizes queries and prevents SQL injection.
 - **Content Security Policy (CSP)**: `django-csp` is installed and configured in `settings.py` to restrict content sources, mitigating XSS risks.
+
+## Task 3: HTTPS and Secure Redirects (Security Review)
+
+This project is configured to enforce production-level web security.
+
+- **HTTPS Enforcement**: When `DEBUG = False`, `SECURE_SSL_REDIRECT` is set to `True`, forcing all user traffic over HTTPS.
+- **HSTS (HTTP Strict Transport Security)**: `SECURE_HSTS_SECONDS` is set for one year, which, along with `includeSubDomains` and `preload`, instructs browsers to *only* communicate with this site via HTTPS, protecting against man-in-the-middle attacks.
+- **Secure Cookies**: `SESSION_COOKIE_SECURE` and `CSRF_COOKIE_SECURE` are set to `True` in production, ensuring that session and CSRF tokens are never transmitted over insecure HTTP.
+- **Deployment**: The `DEPLOYMENT.md` file contains a sample Nginx configuration for SSL/TLS termination, which complements Django's security settings.

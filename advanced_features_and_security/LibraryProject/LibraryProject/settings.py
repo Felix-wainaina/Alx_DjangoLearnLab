@@ -143,28 +143,38 @@ LOGIN_URL = '/login/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# --- Task 2: Security Best Practices ---
-# Documentation: These settings are for production.
-# Set DEBUG = False in a real production environment.
-# We keep it True for development testing.
-# DEBUG = False
+# --- Task 2 & 3: Security Best Practices ---
+# Documentation: These settings are configured for a secure production environment.
+# We use 'if not DEBUG:' to apply them only in production,
+# allowing our local development server (which is HTTP) to still work.
 
-# (Step 1) Enforce secure cookies (only sent over HTTPS)
-# In production, set these to True after enabling HTTPS.
-SESSION_COOKIE_SECURE = False  # Set to True in production
-CSRF_COOKIE_SECURE = False     # Set to True in production
-
-# (Step 1) Browser-side protections
-SECURE_BROWSER_XSS_FILTER = True  # Deprecated, but good for older browsers
+# (Task 2) XSS/MIME-Sniffing/Clickjacking Protection
 SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'SAMEORIGIN'  # Prevents clickjacking
+SECURE_BROWSER_XSS_FILTER = True # (Note: Deprecated, but good for older browsers)
 
-# (Step 4) Content Security Policy (CSP)
-# Documentation: This restricts where content (scripts, styles)
-# can be loaded from, preventing many XSS attacks.
-# 'self' means only allow loading from our own domain.
+# (Task 3) Clickjacking protection updated to 'DENY'
+X_FRAME_OPTIONS = 'DENY'
+
+# (Task 2) Content Security Policy settings
 CSP_DEFAULT_SRC = ("'self'",)
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # Allow inline styles for admin
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'") # Allow inline scripts
-# --- End of Task 2 Settings ---
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'")
 
+
+# --- PRODUCTION-ONLY SETTINGS ---
+# These are the settings for Task 3, Step 1 & 2
+if not DEBUG:
+    # (Task 3, Step 1) Force all traffic to HTTPS
+    SECURE_SSL_REDIRECT = True
+    
+    # (Task 3, Step 1) HSTS (HTTP Strict Transport Security)
+    # Tells browsers to *only* contact this site via HTTPS for 1 year
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # (Task 3, Step 2) Secure Cookies
+    # Ensures cookies are only sent over HTTPS
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+# --- End of Task 2 & 3 Settings ---
