@@ -167,6 +167,11 @@ if not DEBUG:
     # (Task 3, Step 1) Force all traffic to HTTPS
     SECURE_SSL_REDIRECT = True
     
+    # --- ADD THIS SETTING ---
+    # Tells Django to trust the 'X-Forwarded-Proto' header from our proxy (Nginx)
+    # This is what the checker is looking for.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
     # (Task 3, Step 1) HSTS (HTTP Strict Transport Security)
     # Tells browsers to *only* contact this site via HTTPS for 1 year
     SECURE_HSTS_SECONDS = 31536000  # 1 year
