@@ -1,6 +1,6 @@
 # bookshelf/models.py
 
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 class Book(models.Model):
@@ -12,14 +12,18 @@ class Book(models.Model):
         return self.title
     
     
-class CustomUserManager(UserManager):
+# --- REPLACE YOUR CustomUserManager WITH THIS ---
+class CustomUserManager(BaseUserManager):
     """
-    Extend the default UserManager so create_user/create_superuser accept extra fields.
-    We still rely on most behavior of Django's UserManager.
+    Custom user model manager.
     """
     def create_user(self, username, email=None, password=None, **extra_fields):
+        """
+        Create and save a User with the given email and password.
+        """
         if not username:
-            raise ValueError("The username must be set")
+            raise ValueError('The Username must be set')
+        
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
@@ -27,6 +31,9 @@ class CustomUserManager(UserManager):
         return user
 
     def create_superuser(self, username, email=None, password=None, **extra_fields):
+        """
+        Create and save a SuperUser with the given email and password.
+        """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -35,18 +42,17 @@ class CustomUserManager(UserManager):
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
-
+        
         return self.create_user(username, email, password, **extra_fields)
 
 
+# --- YOUR CustomUser MODEL REMAINS THE SAME (but ensure it uses the manager) ---
 class CustomUser(AbstractUser):
-    """
-    Extends Django's AbstractUser by adding date_of_birth and profile_photo.
-    """
     date_of_birth = models.DateField(null=True, blank=True)
-    profile_photo = models.ImageField(upload_to='profiles/', null=True, blank=True)
+    profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
 
-    objects = CustomUserManager()
+    # Tell Django to use CustomUserManager
+    objects = CustomUserManager() # Make sure this line is here
 
     def __str__(self):
         return self.username
