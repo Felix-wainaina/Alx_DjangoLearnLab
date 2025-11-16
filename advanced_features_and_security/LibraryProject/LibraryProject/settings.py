@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # My apps
     'bookshelf',
+    'csp' , # Add this for Content Security Policy
 ]
 
 # Use custom user model
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # Add this for Content Security Policy
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -140,4 +142,29 @@ LOGIN_URL = '/login/'
 # Media files (for profile photos)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# --- Task 2: Security Best Practices ---
+# Documentation: These settings are for production.
+# Set DEBUG = False in a real production environment.
+# We keep it True for development testing.
+# DEBUG = False
+
+# (Step 1) Enforce secure cookies (only sent over HTTPS)
+# In production, set these to True after enabling HTTPS.
+SESSION_COOKIE_SECURE = False  # Set to True in production
+CSRF_COOKIE_SECURE = False     # Set to True in production
+
+# (Step 1) Browser-side protections
+SECURE_BROWSER_XSS_FILTER = True  # Deprecated, but good for older browsers
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # Prevents clickjacking
+
+# (Step 4) Content Security Policy (CSP)
+# Documentation: This restricts where content (scripts, styles)
+# can be loaded from, preventing many XSS attacks.
+# 'self' means only allow loading from our own domain.
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # Allow inline styles for admin
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'") # Allow inline scripts
+# --- End of Task 2 Settings ---
 
