@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 
     # My apps
     'bookshelf',
-    'relationship_app',
 ]
 
 # Use custom user model

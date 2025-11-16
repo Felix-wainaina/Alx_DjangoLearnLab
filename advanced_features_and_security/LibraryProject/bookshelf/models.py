@@ -10,6 +10,14 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+    class Meta:
+        # Documentation for permissions (Task 1, Step 5)
+        permissions = [
+            ("can_create", "Can create book"),
+            ("can_view", "Can view book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
+        ]
     
     
 # --- REPLACE YOUR CustomUserManager WITH THIS ---

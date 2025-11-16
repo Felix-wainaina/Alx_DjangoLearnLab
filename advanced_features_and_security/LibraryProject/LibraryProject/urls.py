@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Add this line to connect your app's URLs
-    path('', include('relationship_app.urls')),
+    path('', include('bookshelf.urls')),
 ]
 
 if settings.DEBUG:
