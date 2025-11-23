@@ -1,3 +1,6 @@
+from django.contrib import admin
+from django.urls import path, include # <--- Ensure include is imported
+
 """
 URL configuration for api_project project.
 
@@ -19,4 +22,5 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('api.urls')), # <--- This connects to your app
 ]
