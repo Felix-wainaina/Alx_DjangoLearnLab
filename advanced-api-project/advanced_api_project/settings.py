@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Add these two lines:
     'rest_framework',
+    'django_filters', # <--- Add this
     'api',
 ]
 

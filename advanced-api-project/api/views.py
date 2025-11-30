@@ -4,58 +4,35 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from .models import Book
 from .serializers import BookSerializer
 
+# Import the necessary backends
+from django_filters import rest_framework
+from rest_framework import filters
+
 class BookListView(generics.ListAPIView):
     """
     View to list all books.
-    Access: Public (AllowAny) by default, or ReadOnly.
-    """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    # Explicitly allowing read-only access to unauthenticated users
-    permission_classes = [IsAuthenticatedOrReadOnly] 
-
-class BookDetailView(generics.RetrieveAPIView):
-    """
-    View to retrieve a single book by ID.
-    Access: Public (AllowAny) by default, or ReadOnly.
+    Supports:
+    - Filtering by title, author, and publication_year
+    - Searching by title and author's name
+    - Ordering by title and publication_year
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-class BookCreateView(generics.CreateAPIView):
-    """
-    View to create a new book.
-    Access: Authenticated users only.
-    Customization: Standard validation logic is handled by the serializer.
-    """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated] # Locks this view
+    # Add the filter backends
+    filter_backends = [rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
 
-    def perform_create(self, serializer):
-        # This hook allows custom logic during creation
-        # Example: We could assign the current user as the adder of the book if we had that field
-        serializer.save() 
+    # 1. Configure Filtering (Exact matches)
+    # Allows requests like: /books/?title=Harry%20Potter
+    filterset_fields = ['title', 'author', 'publication_year']
 
-class BookUpdateView(generics.UpdateAPIView):
-    """
-    View to update an existing book.
-    Access: Authenticated users only.
-    """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
+    # 2. Configure Searching (Text search)
+    # Allows requests like: /books/?search=Potter
+    # Note: 'author__name' allows searching by the related author's name field
+    search_fields = ['title', 'author__name']
 
-    def perform_update(self, serializer):
-        # Custom logic for updating could go here
-        serializer.save()
-
-class BookDeleteView(generics.DestroyAPIView):
-    """
-    View to delete a book.
-    Access: Authenticated users only.
-    """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
+    # 3. Configure Ordering
+    # Allows requests like: /books/?ordering=publication_year
+    ordering_fields = ['title', 'publication_year']
+    ordering = ['title'] # Default ordering
