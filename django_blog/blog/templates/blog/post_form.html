@@ -1,16 +1,37 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="auth-container" style="max-width: 600px; margin: 50px auto; padding: 30px; background: #1e293b; border-radius: 15px;">
-    <h2 style="text-align: center; margin-bottom: 20px;">New Post</h2>
+    <h2 style="text-align: center; margin-bottom: 20px;">
+        {% if view.object %}Edit Post{% else %}New Post{% endif %}
+    </h2>
+    
     <form method="POST">
         {% csrf_token %}
         {% for field in form %}
         <div style="margin-bottom: 20px;">
             <label style="display: block; margin-bottom: 5px; font-weight: bold;">{{ field.label }}</label>
-            {{ field }} 
+            {{ field }}
+            
+            {% if field.name == 'tags' %}
+                <small style="color: #94a3b8; display: block; margin-top: 5px;">Separate tags with commas (e.g., "tech, django, coding")</small>
+            {% endif %}
+            
+            {% if field.help_text and field.name != 'tags' %}
+                <small style="color: #94a3b8; display: block;">{{ field.help_text }}</small>
+            {% endif %}
+            
+            {% for error in field.errors %}
+                <div style="color: #ef4444; font-size: 0.9em; margin-top: 5px;">{{ error }}</div>
+            {% endfor %}
         </div>
         {% endfor %}
-        <button type="submit" class="btn-register" style="width: 100%; border: none; cursor: pointer;">Save Post</button>
+        
+        <button type="submit" class="btn-register" style="width: 100%; border: none; cursor: pointer;">
+            {% if view.object %}Update Post{% else %}Save Post{% endif %}
+        </button>
+        
+        <a href="javascript:history.back()" style="display: block; text-align: center; margin-top: 15px; color: #cbd5e1; text-decoration: none;">Cancel</a>
     </form>
 </div>
 {% endblock %}

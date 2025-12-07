@@ -17,12 +17,19 @@
     <header>
         <nav class="navbar">
             <div class="logo">
-                <a href="#">✨ DjangoBlog</a>
+                <a href="{% url 'home' %}">✨ DjangoBlog</a>
             </div>
+
+            <form action="{% url 'search' %}" method="GET" style="display: flex; gap: 10px;">
+                <input type="text" name="q" placeholder="Search..."
+                    style="padding: 5px 10px; border-radius: 20px; border: none;">
+                <button type="submit"
+                    style="background: #a855f7; border: none; padding: 5px 15px; border-radius: 20px; color: white; cursor: pointer;">Search</button>
+            </form>
+
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'posts' %}">Blog Posts</a></li>
-
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'post-create' %}">New Post</a></li>
                 <li><a href="{% url 'profile' %}">Profile</a></li>
