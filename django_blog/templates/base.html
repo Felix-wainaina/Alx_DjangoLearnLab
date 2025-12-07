@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Django Blog{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;700&display=swap"
+        rel="stylesheet">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
+
 <body>
     <header>
         <nav class="navbar">
@@ -17,10 +20,20 @@
                 <a href="#">✨ DjangoBlog</a>
             </div>
             <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Blog Posts</a></li>
-                <li><a href="#">Login</a></li>
-                <li><a href="#" class="btn-register">Register</a></li>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="#">Blog Posts</a></li> {% if user.is_authenticated %}
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit"
+                            style="background:none; border:none; color:#cbd5e1; font:inherit; cursor: pointer;">Logout</button>
+                    </form>
+                </li>
+                {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}" class="btn-register">Register</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
@@ -40,4 +53,5 @@
 
     <script src="{% static 'js/scripts.js' %}"></script>
 </body>
+
 </html>

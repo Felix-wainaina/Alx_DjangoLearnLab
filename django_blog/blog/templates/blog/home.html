@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to DjangoBlog</h1>
+    <p>Share your stories with the world.</p>
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.username }}! <a href="{% url 'profile' %}" style="color: #a855f7;">Go to Profile</a></p>
+    {% else %}
+        <p><a href="{% url 'register' %}" class="btn-register">Get Started</a></p>
+    {% endif %}
+</div>
+{% endblock %}
