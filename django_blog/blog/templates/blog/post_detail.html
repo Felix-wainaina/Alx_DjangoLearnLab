@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <article style="background: #1e293b; padding: 40px; border-radius: 10px; border: 1px solid #334155;">
+        <h1 style="font-size: 2.5em; margin-bottom: 10px;">{{ object.title }}</h1>
+        <div style="font-size: 0.9em; color: #94a3b8; margin-bottom: 30px; border-bottom: 1px solid #334155; padding-bottom: 20px;">
+            By <span style="color: #a855f7;">{{ object.author }}</span> | {{ object.published_date|date:"F d, Y" }}
+        </div>
+        
+        <div style="line-height: 1.8; font-size: 1.1em;">
+            {{ object.content|linebreaks }}
+        </div>
+
+        {% if object.author == user %}
+            <div style="margin-top: 40px; border-top: 1px solid #334155; padding-top: 20px;">
+                <a href="{% url 'post-update' object.pk %}" class="btn-register" style="text-decoration: none; display: inline-block; margin-right: 10px;">Edit Post</a>
+                <a href="{% url 'post-delete' object.pk %}" style="color: #ef4444; text-decoration: none; font-weight: bold;">Delete Post</a>
+            </div>
+        {% endif %}
+    </article>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <h1 style="margin-bottom: 20px;">Latest Posts</h1>
+    {% for post in posts %}
+        <article style="background: #1e293b; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #334155;">
+            <h2 style="margin-bottom: 10px;">
+                <a href="{% url 'post-detail' post.pk %}" style="text-decoration: none; color: #a855f7;">{{ post.title }}</a>
+            </h2>
+            <div style="font-size: 0.9em; color: #94a3b8; margin-bottom: 15px;">
+                By {{ post.author }} on {{ post.published_date|date:"F d, Y" }}
+            </div>
+            <p>{{ post.content|truncatewords:30 }}</p>
+            <a href="{% url 'post-detail' post.pk %}" style="display: inline-block; margin-top: 10px; color: #cbd5e1; font-weight: bold;">Read More &rarr;</a>
+        </article>
+    {% endfor %}
+</div>
+{% endblock %}

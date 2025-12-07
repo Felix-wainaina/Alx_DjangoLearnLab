@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container" style="max-width: 600px; margin: 50px auto; padding: 30px; background: #1e293b; border-radius: 15px;">
+    <h2 style="text-align: center; margin-bottom: 20px;">New Post</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">{{ field.label }}</label>
+            {{ field }} 
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn-register" style="width: 100%; border: none; cursor: pointer;">Save Post</button>
+    </form>
+</div>
+{% endblock %}
