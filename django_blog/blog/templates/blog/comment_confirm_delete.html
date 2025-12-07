@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 500px; margin: 50px auto; padding: 30px; background: #1e293b; border-radius: 15px; text-align: center;">
+    <h2 style="margin-bottom: 20px;">Delete Comment?</h2>
+    <p>Are you sure you want to delete your comment?</p>
+    <div style="background: #0f172a; padding: 10px; margin: 20px 0; border-radius: 5px; font-style: italic; color: #cbd5e1;">
+        "{{ object.content|truncatechars:50 }}"
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" style="background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Yes, Delete</button>
+        <a href="javascript:history.back()" style="margin-left: 15px; color: #cbd5e1; text-decoration: none;">Cancel</a>
+    </form>
+</div>
+{% endblock %}
