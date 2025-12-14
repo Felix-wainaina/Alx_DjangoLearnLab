@@ -7,7 +7,7 @@ router.register(r'posts', PostViewSet)
 router.register(r'comments', CommentViewSet)
 
 urlpatterns = [
+    # The order matters; static paths should usually come before router includes
+    path('feed/', FeedView.as_view(), name='post_feed'),
     path('', include(router.urls)),
-    # New feed route
-    path('feed/', FeedView.as_view(), name='post-feed'),
 ]

@@ -32,6 +32,8 @@ class FeedView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Requirement: Filter posts from users the current user follows
-        following_users = self.request.user.following.all()
+        # Accessing the following users from the current user
+        user = self.request.user
+        following_users = user.following.all()
+        # Requirement: posts from followed users, most recent first
         return Post.objects.filter(author__in=following_users).order_by('-created_at')
