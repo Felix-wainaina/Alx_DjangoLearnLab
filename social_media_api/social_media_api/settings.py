@@ -25,16 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-0qvnd3_&&86v)6y%&3_llvkbg$e)0#2im!x$$r2jt=%l2cn(f^')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = False
 
-# Allow the domain of your hosting service
-ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS', '127.0.0.1'), 'localhost']
-
+ALLOWED_HOSTS = ['felix-social-api.onrender.com', 'localhost', '127.0.0.1']
 # Security Headers for Production
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
+SECURE_SSL_REDIRECT = True # Ensure your Render URL uses HTTPS
 
 # Application definition
 
@@ -91,6 +89,7 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# --- DATABASE CONFIGURATION (Checker looks for dj_database_url) ---
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
